@@ -1,0 +1,32 @@
+---
+title: "Untitled"
+author: "Reid Haefer"
+date: "8/23/2019"
+output: html_document
+---
+
+```{r}
+library(pacman)
+p_load(tidyverse, readxl, lubridate, data.table, purrr, janitor, scales,DT, plotly, shiny)
+```
+
+## Graph
+```{r, warning=FALSE, message=FALSE, echo=FALSE, out.width='150%'}
+colors <- c("#030303", "#9B9A9A", "#E58E03", "#D4E503", "#0DA201", 
+              "#05E6E3", "#040B94", "#710494", "#F459FC", "#E1091D",
+              "#69F92D", "#2DF9AE", "#722DF9", "#F92D8E", "#D6D4D5")
+
+a<-final %>% 
+    group_by(Day, station) %>%
+    summarise(Count=sum(Count, na.rm=T)) %>%
+    na_if(0)%>% 
+  ggplot(aes(Day, Count, group=station, color=station)) + geom_line(size=.7) +  theme_minimal() +
+    scale_x_date(date_breaks = "1 week", date_labels = "%D") + theme(axis.text.x=element_text(hjust=1, angle=45)) +
+  scale_color_manual(values=colors)
+ggplotly(a) %>%
+  layout(legend = list(orientation = "h", x = 0.0, y = -0.3)) %>%
+  style(legendgroup = NULL)
+
+xfun::embed_file("H:/model/model_update_2019/validation/validation_data.csv")
+```
+
